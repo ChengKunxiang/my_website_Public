@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="cn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/default.css">
+    <script src="../js/function.js"></script>
+    <script src="../js/click_show.js"></script>
+    <script src="../js/change_elements.js"></script>
+    <title>default_title</title>
+    <style>
+    .container {
+      max-width: 1200px;
+      margin: 0px auto;
+      padding: 0 20px;
+    }
+    .showing_place { 
+        flex: 1;
+        flex-grow: 1;
+        background-repeat: repeat; /* 重复显示背景图片 */
+        background-size: contain; /* 根据容器大小调整图片 */
+        background-color: beige;
+        overflow-y: scroll;
+    }
+    .showing_img {
+        /* height: 100%; */
+        width: 100%;
+        object-fit: cover;
+    }
+    </style>
+<script>
+    window.onload = function() {
+        show_images();  // 调用图片加载逻辑
+        change_title();  // 设置标题
+    };
+</script>
+</head>
+
+<body>
+    <div style="
+        display: flex; 
+        justify-content: left; 
+        align-items: center;
+        height: 110px;
+        background-color: rgb(102, 104, 104);
+        ">
+        <div class="title" style="font-size: 40px" id="titleDiv"></div>
+        <script>
+            window.onload = get_title();
+        </script>
+    </div>
+    <div class="main-container">
+        <div class="list_container">
+            <div class="header">列表：</div>
+                <div class="box">
+                    <div class="container">
+                        <!-- 加载状态占位 -->
+                        <div class="loading" id="loading">
+                        正在加载图片...
+                        </div>
+                    
+                        <!-- 图片容器 -->
+                        <div class="image-grid" id="image-grid"></div>
+                    
+                        <!-- 错误信息容器 -->
+                        <div id="error-container" class="error" hidden></div>
+                    </div>
+                </div>
+            <div class="footer">End</div>
+        </div>
+        <div class="showing_place"  id="showing_place">
+            <img id="showing_image"  src="" alt="请点击一张图片。。。" class="showing_img"></img>
+                <script>
+                    window.onload = show_images();  // 调用图片加载逻辑
+                    window.onload = function() {                          
+                        switch_background(get_title());
+                        change_title();
+                    }
+                    
+                </script>
+        </div>
+    </div>
+        
+</body>
+</html>

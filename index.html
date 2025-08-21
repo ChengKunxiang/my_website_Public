@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="cn">
+<head>
+    <!-- ds API Key: sk-e2fb7e0a6e024fedbad012126a32ebe3 -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My_index</title>
+    <script src="js/index_.js"></script>
+    <link rel="stylesheet" href="css/index_.css">
+</head>
+<body>
+    <h2 class="header">导航</h2>
+    <h3 class="header" style="font-size: 20px;" id="sentence-container">...</h3>
+    <div style="color: blue;text-align: center;">==============================================================================================================</div>
+
+    <!-- 超算导航 -->
+    <div class="content">
+        <h2 class="header_inbox">超算</h2>
+        <table>
+            <thead>
+                <th>超算名称</th>
+                <th>账号</th>
+                <th>密码</th>
+                <th>网址</th>
+                <th>ssh登录地址</th>
+                <th></th>
+            </thead>
+            <tbody>
+                <tr>
+                    <th colspan="7" style="text-align: left;">河海超算</th>
+                </tr>
+                <tr>
+                    <td >河海超算</td>
+                    <td>***</td>
+                    <td>***</td>
+                    <td><a href="http://222.190.246.206:40052/#/login"target="_blank">传送门</a></td>
+                    <td>***</td>
+                    <td><button onclick="readRowData(this)">Copy!</button></td>
+                </tr>
+                <tr>
+                    <th colspan="7" style="text-align: left;">学校超算</th>
+                </tr>
+                <tr>
+                    <td>学校一期</td>
+                    <td>***</td>
+                    <td>***</td>
+                    <td><a href="https://211.65.101.76/shterm/login?logout"target="_blank">传送门</a></td>
+                    <td>***</td>
+                    <td><button onclick="readRowData(this)">Copy!</button></td>
+                </tr>
+                <tr>
+                    <td>学校二期</td>
+                    <td>***</td>
+                    <td>***</td>
+                    <td><a href="https://hpcpt2.nuaa.edu.cn/#/loginNuaa"target="_blank">传送门</a></td>
+                    <td>***</td>
+                    <td><button onclick="readRowData(this)">Copy!</button></td>
+                </tr>
+                <tr>
+                    <th colspan="7" style="text-align: left;">北京超算</th>
+                </tr>          
+                <tr>
+                    <td>北京超算</td>
+                    <td>***</td>
+                    <td>***</td>
+                    <td><a href="https://211.65.101.76/shterm/login?logout"target="_blank">传送门</a></td>
+                    <td>***</td>
+                    <td><button onclick="readRowData(this)">Copy!</button></td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <td colspan="77">!(^_^)!已经没有了捏~</td>
+            </tfoot>
+        </table>
+    </div>
+
+    <!-- 网站导航 -->
+    <div class="content">
+        <h2 class="header_inbox">网站导航</h2>
+        <h3 style="text-align: center;">
+            <button class="button_goweb" onclick="go_to_onlineweb('https://www.deepseek.com/')">"deepseek"↗</button>
+            <button class="button_goweb" onclick="go_to_onlineweb('https://www.bilibili.com/')">"bilibili"↗</button>
+            <button class="button_goweb" onclick="go_to_onlineweb('https://www.csdn.net/')">"csdn"↗</button>
+            <button class="button_goweb" onclick="go_to_onlineweb('https://github.com/')">"github"↗</button>
+            <button class="button_goweb" onclick="go_to_onlineweb('https://www.deepl.com/zh/translator')">"deepl"↗</button>
+            <button class="button_goweb" onclick="go_to_onlineweb('https://www.cnki.net/index/')">"中国知网"↗</button>
+            <button class="button_goweb" onclick="go_to_onlineweb('https://translate.google.com/?sl=ru&tl=zh-CN&op=translate')">"Google翻译"↗</button>
+            <button class="button_goweb" onclick="go_to_onlineweb('https://pan.nuaa.edu.cn/apps/files/desktop/')">"航专云盘"↗</button>
+        </h3>
+    </div>
+
+    <!-- 导航栏 -->
+    <div class="content">
+        <h2 class="header_inbox">导航栏</h2>
+
+    </div>
+    
+    <!-- AI聊天 -->
+    <div class="content">
+        <div class="chat-container">
+            <div id="chat-box"></div>
+            <div id="input-box">
+                <input type="text" id="newDSInput" placeholder="输入您的问题...">
+                <button onclick="sendMessage()">发送</button>
+            </div>
+        </div>
+    </div>
+    <!-- 记事本 -->
+    <div class="content">
+        <div class="container" style="width: 1000px;">
+            <div class="input-group">
+                <input type="text" id="newItemInput" placeholder="添加新任务(该模块不完善！有数据丢失的风险)">
+                <button onclick="addItem()">添加</button>
+            </div>
+            <ul id="itemList" class="list">
+                <!-- 清单项将动态添加到这里 -->
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // 页面加载时加载本地存储的任务
+        window.onload = function() {
+        loadItems();
+        sentence();
+        };
+    </script>
+
+    <script>
+        let conversationHistory = [];
+
+        async function sentence() {
+            const input = "写一句克苏鲁的话，要求短小精悍，和暗黑地牢的老祖语气相近";
+            const targetElement = document.getElementById('sentence-container'); // 定义元素引用
+            
+            // 元素存在性检查
+            if (!targetElement) {
+                console.error('找不到元素 #sentence-container');
+                return;
+            }
+
+            try {
+                const response = await fetch('http://localhost:3000/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        messages: [
+                            { role: "user", content: input }
+                        ]
+                    })
+                });
+
+                const data = await response.json();
+
+                // 更新元素内容
+                targetElement.textContent = data.success 
+                    ? data.reply 
+                    : `错误：${data.error || '未知错误'}`;
+
+            } catch (error) {
+                targetElement.textContent = "网络错误！";
+                console.error('请求失败:', error);
+            }
+        }
+
+        async function sendMessage() {
+            const input = document.getElementById('newDSInput');
+            const userText = input.value.trim();
+            if (!userText) return;
+
+            // 添加用户消息
+            addMessage(userText, 'user');
+            input.value = '';
+            
+            // 显示加载状态
+            const loadingId = addMessage('思考中...', 'bot', true);
+
+            try {
+                const response = await fetch('http://localhost:3000/api/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        messages: [
+                            ...conversationHistory,
+                            { role: "user", content: userText }
+                        ]
+                    })
+                });
+
+                const data = await response.json();
+                
+                // 移除加载提示
+                document.getElementById(loadingId).remove();
+
+                if (data.success) {
+                    addMessage(data.reply, 'bot');
+                    updateHistory(userText, data.reply);
+                } else {
+                    addMessage(`错误：${data.error}`, 'bot');
+                }
+            } catch (error) {
+                document.getElementById(loadingId).remove();
+                addMessage('网络连接异常，请重试', 'bot');
+            }
+        }
+
+        function addMessage(text, role, isTemp = false) {
+            const chatBox = document.getElementById('chat-box');
+            const messageDiv = document.createElement('div');
+            const messageId = 'msg-' + Date.now();
+            
+            messageDiv.id = messageId;
+            messageDiv.className = `message ${role}-message${isTemp ? ' loading' : ''}`;
+            messageDiv.textContent = text;
+            
+            chatBox.appendChild(messageDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+            
+            return messageId;
+        }
+
+        function updateHistory(userText, botText) {
+            conversationHistory.push(
+                { role: "user", content: userText },
+                { role: "assistant", content: botText }
+            );
+            
+            // 保持最多10轮对话
+            if (conversationHistory.length > 20) {
+                conversationHistory = conversationHistory.slice(-20);
+            }
+        }
+
+        // 回车发送
+        document.getElementById('newDSInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {sendMessage();}
+        });
+
+        document.getElementById('newItemInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {addItem();}
+        });
+    </script>
+</body>
+</html>
